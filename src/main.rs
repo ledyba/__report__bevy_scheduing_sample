@@ -8,7 +8,7 @@ enum MyStage {
 
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 enum MyState {
-  UpdateState,
+  InGameState,
 }
 
 fn print_before_system() {
@@ -23,11 +23,11 @@ fn print_system() {
 }
 
 fn main() {
-  let before_system_set = SystemSet::on_update(MyState::UpdateState)
+  let before_system_set = SystemSet::on_update(MyState::InGameState)
     .with_system(print_before_system.system());
-  let after_system_set = SystemSet::on_update(MyState::UpdateState)
+  let after_system_set = SystemSet::on_update(MyState::InGameState)
     .with_system(print_after_system.system());
-  let update_system_set = SystemSet::on_update(MyState::UpdateState)
+  let update_system_set = SystemSet::on_update(MyState::InGameState)
     .with_system(print_system.system());
   App::build()
     .add_plugins(DefaultPlugins)
@@ -41,9 +41,9 @@ fn main() {
       MyStage::AfterRound,
       SystemStage::parallel(),
     )
-    .add_state_to_stage(MyStage::BeforeRound, MyState::UpdateState)
-    .add_state_to_stage(CoreStage::Update, MyState::UpdateState)
-    .add_state_to_stage(MyStage::AfterRound, MyState::UpdateState)
+    .add_state_to_stage(MyStage::BeforeRound, MyState::PrepareState)
+    .add_state_to_stage(CoreStage::Update, MyState::PrepareState)
+    .add_state_to_stage(MyStage::AfterRound, MyState::PrepareState)
     .add_system_set_to_stage(MyStage::BeforeRound, before_system_set)
     .add_system_set_to_stage(CoreStage::Update, update_system_set)
     .add_system_set_to_stage(MyStage::AfterRound, after_system_set)
