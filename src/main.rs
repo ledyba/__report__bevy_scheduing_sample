@@ -17,6 +17,7 @@ fn load_system(mut state: ResMut<State<MyState>>) {
   // ...
 
   // if loading.is_done() {
+    println!("Loading is done");
     state.replace(MyState::InGame).unwrap();
   //}
 }
@@ -53,10 +54,11 @@ fn main() {
       MyStage::AfterRound,
       SystemStage::parallel(),
     )
+    .add_state_to_stage(CoreStage::First, MyState::Loading)
     .add_state_to_stage(MyStage::BeforeRound, MyState::Loading)
     .add_state_to_stage(CoreStage::Update, MyState::Loading)
     .add_state_to_stage(MyStage::AfterRound, MyState::Loading)
-    .add_system_set_to_stage(CoreStage::Update, loading_system_set)
+    .add_system_set_to_stage(CoreStage::First, loading_system_set)
     .add_system_set_to_stage(MyStage::BeforeRound, before_system_set)
     .add_system_set_to_stage(CoreStage::Update, update_system_set)
     .add_system_set_to_stage(MyStage::AfterRound, after_system_set)
