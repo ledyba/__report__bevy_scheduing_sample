@@ -31,7 +31,6 @@ fn main() {
     .with_system(print_system.system());
   App::build()
     .add_plugins(DefaultPlugins)
-    .add_state_to_stage(CoreStage::Update, MyState::UpdateState)
     .add_stage_before(
       CoreStage::Update,
       MyStage::BeforeRound,
@@ -42,6 +41,9 @@ fn main() {
       MyStage::AfterRound,
       SystemStage::parallel(),
     )
+    .add_state_to_stage(MyStage::BeforeRound, MyState::UpdateState)
+    .add_state_to_stage(CoreStage::Update, MyState::UpdateState)
+    .add_state_to_stage(MyStage::AfterRound, MyState::UpdateState)
     .add_system_set_to_stage(MyStage::BeforeRound, before_system_set)
     .add_system_set_to_stage(CoreStage::Update, update_system_set)
     .add_system_set_to_stage(MyStage::AfterRound, after_system_set)
